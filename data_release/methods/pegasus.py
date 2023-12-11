@@ -1,5 +1,5 @@
 import numpy as np
-import delay_spas
+import methods.delay_spas
 import matplotlib.pyplot as plt
 
 def count_mae(ex, published_result):
@@ -25,7 +25,7 @@ def naive_event(ex, sensitivity_, eps):
     published_result = []
 
     for i in range(total_time):
-        noise_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps, dim)
+        noise_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps, dim)
         published_result.append(noise_result)
 
     return published_result
@@ -43,7 +43,7 @@ def whether_group(groupi, old_avg, new_data, tau, eps_group, sensitivity_):
 
     #print(dev / total_num)
 
-    if (dev / total_num) + delay_spas.add_noise(sensitivity_ / total_num, eps_group / 4, 1) > tau + delay_spas.add_noise(sensitivity_ / total_num, eps_group / 2, 1):
+    if (dev / total_num) + methods.delay_spas.add_noise(sensitivity_ / total_num, eps_group / 4, 1) > tau + methods.delay_spas.add_noise(sensitivity_ / total_num, eps_group / 2, 1):
         return 0, new_avg
     else:
         return 1, new_avg
@@ -81,19 +81,19 @@ def pegasus_delay(ex, sensitivity_, eps, tau):
             else:
                 sum_ = 0
                 for k in range(len(group_)):
-                    sum_ += group_[k] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                    sum_ += group_[k] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                 sum_ = sum_ / len(group_)
                 for k in range(len(group_)):
                     published_result.append(sum_)
 
-                noisy_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                noisy_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                 published_result.append(noisy_result)
                 group_ = []
                 #published_result.append(ex[i][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim))
     if len(published_result) < total_time:
         sum_ = 0
         for k in range(len(group_)):
-            sum_ += group_[k] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+            sum_ += group_[k] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
         sum_ = sum_ / len(group_)
         for k in range(len(group_)):
             published_result.append(sum_)
@@ -119,7 +119,7 @@ def pegasus_nodelay(ex, sensitivity_, eps, tau):
             group_.append(ex[i][0])
             avg_ = ex[i][0]
             group_index.append(i)
-            noisy_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+            noisy_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
             published_result.append(noisy_result)
             group_noisy.append(noisy_result)
 
@@ -129,14 +129,14 @@ def pegasus_nodelay(ex, sensitivity_, eps, tau):
                 group_.append(ex[i][0])
                 group_index.append(i)
                 avg_ = newavg
-                sum_ = ex[i][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                sum_ = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                 group_noisy.append(sum_)
                 for k in range(len(group_) - 1):
                     sum_ += group_noisy[group_index[k]]
                 sum_ = sum_ / len(group_)
                 published_result.append(sum_)
             else:
-                noisy_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                noisy_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                 published_result.append(noisy_result)
                 group_noisy.append(noisy_result)
                 group_ = []

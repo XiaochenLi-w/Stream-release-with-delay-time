@@ -1,7 +1,7 @@
 #-----------group-based post-processing----------
 
 import numpy as np
-import delay_spas
+import methods.delay_spas
 import matplotlib.pyplot as plt
 
 def count_mae(ex, published_result):
@@ -27,7 +27,7 @@ def naive_event(ex, sensitivity_, eps):
     published_result = []
 
     for i in range(total_time):
-        noise_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps, dim)
+        noise_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps, dim)
         published_result.append(noise_result)
 
     return published_result
@@ -47,7 +47,7 @@ def whether_group(groupi, old_avg, new_data, tau, eps_group, sensitivity_, delay
 
     #print(dev / total_num)
 
-    if (dev / total_num) + delay_spas.add_noise(sensitivity_ / total_num, eps_group / (4 * (2 * delay_time - 1)), 1) > tau + delay_spas.add_noise(sensitivity_ / total_num, eps_group / (2 * (2 * delay_time - 1)), 1):
+    if (dev / total_num) + methods.delay_spas.add_noise(sensitivity_ / total_num, eps_group / (4 * (2 * delay_time - 1)), 1) > tau + methods.delay_spas.add_noise(sensitivity_ / total_num, eps_group / (2 * (2 * delay_time - 1)), 1):
         return 0, new_avg
     else:
         return 1, new_avg
@@ -70,7 +70,7 @@ def delay_noslide_event(ex, sensitivity_, eps, delay_time, tau):
                 for j in range(len(group_)):
                     sum_ = 0
                     for k in range(len(group_[j])):
-                        sum_ += group_[j][k] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                        sum_ += group_[j][k] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                     sum_ = sum_ / len(group_[j])
                     for k in range(len(group_[j])):
                         index = group_index[j][k]
@@ -117,7 +117,7 @@ def delay_noslide_event(ex, sensitivity_, eps, delay_time, tau):
                 for j in range(len(group_)):
                     sum_ = 0
                     for k in range(len(group_[j])):
-                        sum_ += group_[j][k] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                        sum_ += group_[j][k] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                     sum_ = sum_ / len(group_[j])
                     for k in range(len(group_[j])):
                         index = group_index[j][k]
@@ -148,7 +148,7 @@ def discontin_reduce(ex, sensitivity_, eps, delay_time, tau):
                     sum_ = 0
                     for k in range(len(group_[j])):
                         sum_ += group_[j][k]
-                    sum_ = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
+                    sum_ = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
                     for k in range(len(group_[j])):
                         index = group_index[j][k]
                         results_indelay[index % delay_time] = sum_
@@ -195,7 +195,7 @@ def discontin_reduce(ex, sensitivity_, eps, delay_time, tau):
                     sum_ = 0
                     for k in range(len(group_[j])):
                         sum_ += group_[j][k]
-                    sum_ = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
+                    sum_ = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
                     for k in range(len(group_[j])):
                         index = group_index[j][k]
                         results_indelay[index % delay_time] = sum_

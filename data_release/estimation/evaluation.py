@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import event_post
-import non_slide
-import pegasus
-import reduce_noise
-import order_adv
+import methods.event_post
+import methods.non_slide
+import methods.pegasus
+import methods.reduce_noise
+import methods.order_adv
 
 # -------naive----------
 def run_naive_event(ex, sensitivity_, epsilon_list, round_):
@@ -13,8 +13,8 @@ def run_naive_event(ex, sensitivity_, epsilon_list, round_):
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = non_slide.naive_event(ex, sensitivity_, eps)
-            err_round += non_slide.count_mae(ex, published_result)
+            published_result = methods.non_slide.naive_event(ex, sensitivity_, eps)
+            err_round += methods.non_slide.count_mae(ex, published_result)
             #print('round', j, 'over!')
 
         error_.append(err_round / round_)
@@ -29,8 +29,8 @@ def run_delay_svt_event(ex, sensitivity_, epsilon_list, round_, delay_time):
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = event_post.delay_svt_event(ex, sensitivity_, eps, delay_time)
-            err_round += event_post.count_mae(ex, published_result)
+            published_result = methods.event_post.delay_svt_event(ex, sensitivity_, eps, delay_time)
+            err_round += methods.event_post.count_mae(ex, published_result)
             #print('round', j, 'over!')
 
         error_.append(err_round / round_)
@@ -45,8 +45,8 @@ def run_delay_group_event(ex, sensitivity_, epsilon_list, round_, delay_time, ta
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = non_slide.delay_noslide_event(ex, sensitivity_, eps, delay_time, tau)
-            err_round += non_slide.count_mae(ex, published_result)
+            published_result = methods.non_slide.delay_noslide_event(ex, sensitivity_, eps, delay_time, tau)
+            err_round += methods.non_slide.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -60,8 +60,8 @@ def run_discontin_reduce(ex, sensitivity_, epsilon_list, round_, delay_time, tau
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = non_slide.discontin_reduce(ex, sensitivity_, eps, delay_time, tau)
-            err_round += non_slide.count_mae(ex, published_result)
+            published_result = methods.non_slide.discontin_reduce(ex, sensitivity_, eps, delay_time, tau)
+            err_round += methods.non_slide.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -75,8 +75,8 @@ def run_pegasus_event(ex, sensitivity_, epsilon_list, round_, tau):
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = pegasus.pegasus_nodelay(ex, sensitivity_, eps, tau)
-            err_round += pegasus.count_mae(ex, published_result)
+            published_result = methods.pegasus.pegasus_nodelay(ex, sensitivity_, eps, tau)
+            err_round += methods.pegasus.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -90,8 +90,8 @@ def run_pegasus_delay(ex, sensitivity_, epsilon_list, round_, tau):
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = pegasus.pegasus_delay(ex, sensitivity_, eps, tau)
-            err_round += pegasus.count_mae(ex, published_result)
+            published_result = methods.pegasus.pegasus_delay(ex, sensitivity_, eps, tau)
+            err_round += methods.pegasus.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
 
@@ -105,8 +105,8 @@ def run_reduce_noise_delay(ex, sensitivity_, epsilon_list, round_, tau, delay_ti
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = reduce_noise.reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time)
-            err_round += reduce_noise.count_mae(ex, published_result)
+            published_result = methods.reduce_noise.reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time)
+            err_round += methods.reduce_noise.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -120,8 +120,8 @@ def run_reduce_noise_delayclose(ex, sensitivity_, epsilon_list, round_, tau, del
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = reduce_noise.reduce_noise_delayclose(ex, sensitivity_, eps, tau, delay_time)
-            err_round += reduce_noise.count_mae(ex, published_result)
+            published_result = methods.reduce_noise.reduce_noise_delayclose(ex, sensitivity_, eps, tau, delay_time)
+            err_round += methods.reduce_noise.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -135,8 +135,8 @@ def run_order_advance(ex, sensitivity_, epsilon_list, round_, delay_time, buc_si
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = order_adv.order_advance(ex, sensitivity_, eps, delay_time, buc_size)
-            err_round += order_adv.count_mae(ex, published_result)
+            published_result = methods.order_adv.order_advance(ex, sensitivity_, eps, delay_time, buc_size)
+            err_round += methods.order_adv.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     

@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import event_post
-import non_slide
-import pegasus
-import reduce_noise
-import order_adv
+import methods.event_post
+import methods.non_slide
+import methods.pegasus
+import methods.reduce_noise
+import methods.order_adv
 
 # -------naive----------
 def run_naive_event(ex, sensitivity_, epsilon_list, round_):
@@ -13,8 +13,8 @@ def run_naive_event(ex, sensitivity_, epsilon_list, round_):
     for eps in epsilon_list:
         err_round = 0
         for j in range(round_):
-            published_result = non_slide.naive_event(ex, sensitivity_, eps)
-            err_round += non_slide.count_mae(ex, published_result)
+            published_result = methods.non_slide.naive_event(ex, sensitivity_, eps)
+            err_round += methods.non_slide.count_mae(ex, published_result)
             #print('round', j, 'over!')
 
         error_.append(err_round / round_)
@@ -29,8 +29,8 @@ def run_delay_svt_event(ex, sensitivity_, eps, round_, delay_time_list):
     for delay_time in delay_time_list:
         err_round = 0
         for j in range(round_):
-            published_result = event_post.delay_svt_event(ex, sensitivity_, eps, delay_time)
-            err_round += event_post.count_mae(ex, published_result)
+            published_result = methods.event_post.delay_svt_event(ex, sensitivity_, eps, delay_time)
+            err_round += methods.event_post.count_mae(ex, published_result)
             #print('round', j, 'over!')
 
         error_.append(err_round / round_)
@@ -45,8 +45,8 @@ def run_delay_group_event(ex, sensitivity_, eps, round_, delay_time_list, tau):
     for delay_time in delay_time_list:
         err_round = 0
         for j in range(round_):
-            published_result = non_slide.delay_noslide_event(ex, sensitivity_, eps, delay_time, tau)
-            err_round += non_slide.count_mae(ex, published_result)
+            published_result = methods.non_slide.delay_noslide_event(ex, sensitivity_, eps, delay_time, tau)
+            err_round += methods.non_slide.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -60,8 +60,8 @@ def run_discontin_reduce(ex, sensitivity_, eps, round_, delay_time_list, tau):
     for delay_time in delay_time_list:
         err_round = 0
         for j in range(round_):
-            published_result = non_slide.discontin_reduce(ex, sensitivity_, eps, delay_time, tau)
-            err_round += non_slide.count_mae(ex, published_result)
+            published_result = methods.non_slide.discontin_reduce(ex, sensitivity_, eps, delay_time, tau)
+            err_round += methods.non_slide.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -74,8 +74,8 @@ def run_order_advance(ex, sensitivity_, eps, round_, delay_time_list, buc_size):
     for delay_time in delay_time_list:
         err_round = 0
         for j in range(round_):
-            published_result = order_adv.order_advance(ex, sensitivity_, eps, delay_time, buc_size)
-            err_round += order_adv.count_mae(ex, published_result)
+            published_result = methods.order_adv.order_advance(ex, sensitivity_, eps, delay_time, buc_size)
+            err_round += methods.order_adv.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
     
@@ -174,8 +174,8 @@ if __name__ == "__main__":
         #epsilon_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
         epsilon = 0.5
         # delay_time = 10
-        #delay_time_list = [3, 10, 15, 20, 40, 60, 80, 100]
-        delay_time_list = [40, 80, 120, 140, 160, 180, 200, 300]
+        delay_time_list = [3, 10, 15, 20, 40, 60, 80, 100]
+        #delay_time_list = [40, 80, 120, 140, 160, 180, 200, 300]
         tau = 3
         sensitivity_ = max(data) - min(data)
         #print(sensitivity_)

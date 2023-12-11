@@ -1,10 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import event_post
-import non_slide
-import pegasus
-import reduce_noise
+import methods.event_post
 import order_adv
 
 
@@ -14,8 +11,8 @@ def run_delay_svt_event(ex, sensitivity_, eps, round_, delay_time_list):
     for delay_time in delay_time_list:
         err_round = 0
         for j in range(round_):
-            published_result = event_post.delay_svt_event(ex, sensitivity_, eps, delay_time)
-            err_round += event_post.count_mae(ex, published_result)
+            published_result = methods.event_post.delay_svt_event(ex, sensitivity_, eps, delay_time)
+            err_round += methods.event_post.count_mae(ex, published_result)
             #print('round', j, 'over!')
 
         error_.append(err_round / round_)

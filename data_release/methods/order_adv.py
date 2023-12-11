@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import math
-import delay_spas
+import methods.delay_spas
 import matplotlib.pyplot as plt
 
 def count_mae(ex, published_result):
@@ -27,7 +27,7 @@ def naive_event(ex, sensitivity_, eps):
     published_result = []
 
     for i in range(total_time):
-        noise_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps, dim)
+        noise_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps, dim)
         published_result.append(noise_result)
     
     return published_result
@@ -146,7 +146,7 @@ def order_advance(ex, sensitivity_, eps, delay_time, buc_size):
             buc_sum[noise_bucalloc[j]] += data_batch[j]
 
         for j in range(buc_num):
-            buc_sum[j] += delay_spas.add_noise(sensitivity_, eps_pub, 1)
+            buc_sum[j] += methods.delay_spas.add_noise(sensitivity_, eps_pub, 1)
             if j > 0 and buc_sum[j] < buc_sum[j - 1]:
                 #buc_sum[j] = buc_sum[j - 1] + buc_size * (buc_size - 1) / 2
                 buc_sum[j] = buc_sum[j - 1]
@@ -177,7 +177,7 @@ def order_advance(ex, sensitivity_, eps, delay_time, buc_size):
             buc_sum[noise_bucalloc[j]] += data_batch[j]
 
         for j in range(buc_num):
-            buc_sum[j] += delay_spas.add_noise(sensitivity_, eps_pub, 1)
+            buc_sum[j] += methods.delay_spas.add_noise(sensitivity_, eps_pub, 1)
             if j > 0 and buc_sum[j] < buc_sum[j - 1]:
                 buc_sum[j] = buc_sum[j - 1] + buc_size * (buc_size - 1) / 2
 

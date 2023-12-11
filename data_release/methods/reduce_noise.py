@@ -1,5 +1,5 @@
 import numpy as np
-import delay_spas
+import methods.delay_spas
 import matplotlib.pyplot as plt
 
 def count_mae(ex, published_result):
@@ -25,7 +25,7 @@ def naive_event(ex, sensitivity_, eps):
     published_result = []
 
     for i in range(total_time):
-        noise_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps, dim)
+        noise_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps, dim)
         published_result.append(noise_result)
 
     return published_result
@@ -43,7 +43,7 @@ def whether_group(groupi, old_avg, new_data, tau, eps_group, sensitivity_):
 
     #print(dev / total_num)
 
-    if (dev / total_num) + delay_spas.add_noise(sensitivity_ / total_num, eps_group / 4, 1) > tau + delay_spas.add_noise(sensitivity_ / total_num, eps_group / 2, 1):
+    if (dev / total_num) + methods.delay_spas.add_noise(sensitivity_ / total_num, eps_group / 4, 1) > tau + methods.delay_spas.add_noise(sensitivity_ / total_num, eps_group / 2, 1):
         return 0, new_avg
     else:
         return 1, new_avg
@@ -92,12 +92,12 @@ def reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time):
                     sum_ = 0
                     for k in range(len(group_)):
                         sum_ += group_[k]
-                    noisy_value = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                    noisy_value = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                     for k in range(len(group_)):
                         published_result.append(noisy_value)
 
                     # the current value is a new group
-                    noisy_value = ex[j][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                    noisy_value = ex[j][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                     published_result.append(noisy_value)
                     # start a new group
                     group_ = []
@@ -112,7 +112,7 @@ def reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time):
                 avg_ = ex[i + delay_time - 1][0]
                 delay_count += 1
                 if i + delay_time == total_time:
-                    published_result.append(ex[i + delay_time - 1][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim))
+                    published_result.append(ex[i + delay_time - 1][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim))
                 continue
 
             # if it is the last delay time window, release all the remaining data in group
@@ -134,7 +134,7 @@ def reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time):
                                     sum_new += group_[idex]
                                 else:
                                     sum_noisy += published_result[k]
-                            noisy_value = (sum_noisy + sum_new + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                            noisy_value = (sum_noisy + sum_new + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                             for k in range(len(published_result), group_index[-1] + 1):
                                 published_result.append(noisy_value)
                             delay_count = 0
@@ -149,7 +149,7 @@ def reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time):
                                 sum_new += group_[idex]
                             else:
                                 sum_noisy += published_result[k]
-                        noisy_value = (sum_noisy + sum_new + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                        noisy_value = (sum_noisy + sum_new + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                         for k in range(len(published_result), group_index[-1] + 1):
                             published_result.append(noisy_value)
                     # if all the values in group haven't been released, add their original value and add noise
@@ -157,13 +157,13 @@ def reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time):
                         sum_ = 0
                         for k in range(len(group_)):
                             sum_ += group_[k]
-                        noisy_value = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                        noisy_value = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                         for k in range(len(group_)):
                             published_result.append(noisy_value)
                         #print(len(published_result))
 
                     # the current value is a new group
-                    noisy_value = ex[i + delay_time - 1][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                    noisy_value = ex[i + delay_time - 1][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                     published_result.append(noisy_value)
                     # start a new group
                     group_ = []
@@ -183,14 +183,14 @@ def reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time):
                         sum_new += group_[idex]
                     else:
                         sum_noisy += published_result[k]
-                noisy_value = (sum_noisy + sum_new + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                noisy_value = (sum_noisy + sum_new + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                 for k in range(len(published_result), group_index[-1] + 1):
                     published_result.append(noisy_value)
             else:
                 sum_ = 0
                 for k in range(len(group_)):
                     sum_ += group_[k]
-                noisy_value = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                noisy_value = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                 for k in range(len(group_)):
                     published_result.append(noisy_value)
 
@@ -244,12 +244,12 @@ def reduce_noise_delayclose(ex, sensitivity_, eps, tau, delay_time):
                     sum_ = 0
                     for k in range(len(group_)):
                         sum_ += group_[k]
-                    noisy_value = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                    noisy_value = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                     for k in range(len(group_)):
                         published_result.append(noisy_value)
 
                     # the current value is a new group
-                    noisy_value = ex[j][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                    noisy_value = ex[j][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                     published_result.append(noisy_value)
                     # start a new group
                     group_ = []
@@ -264,7 +264,7 @@ def reduce_noise_delayclose(ex, sensitivity_, eps, tau, delay_time):
                 avg_ = ex[i + delay_time - 1][0]
                 delay_count += 1
                 if i + delay_time == total_time:
-                    published_result.append(ex[i + delay_time - 1][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim))
+                    published_result.append(ex[i + delay_time - 1][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim))
                 continue
 
             # if it is the last delay time window, release all the remaining data in group
@@ -282,7 +282,7 @@ def reduce_noise_delayclose(ex, sensitivity_, eps, tau, delay_time):
                             sum_ = 0
                             for k in range(len(group_)):
                                 sum_ += group_[k]
-                            noisy_value = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                            noisy_value = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                             for k in range(len(group_)):
                                 published_result.append(noisy_value)
 
@@ -294,13 +294,13 @@ def reduce_noise_delayclose(ex, sensitivity_, eps, tau, delay_time):
                     sum_ = 0
                     for k in range(len(group_)):
                         sum_ += group_[k]
-                    noisy_value = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                    noisy_value = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                     for k in range(len(group_)):
                         published_result.append(noisy_value)
                     #print(len(published_result))
 
                     # the current value is a new group
-                    noisy_value = ex[i + delay_time - 1][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+                    noisy_value = ex[i + delay_time - 1][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
                     published_result.append(noisy_value)
                     # start a new group
                     group_ = []
@@ -314,7 +314,7 @@ def reduce_noise_delayclose(ex, sensitivity_, eps, tau, delay_time):
             sum_ = 0
             for k in range(len(group_)):
                 sum_ += group_[k]
-            noisy_value = (sum_ + delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+            noisy_value = (sum_ + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
             for k in range(len(group_)):
                 published_result.append(noisy_value)
      

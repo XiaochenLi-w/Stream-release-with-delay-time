@@ -1,6 +1,6 @@
 #----------Order-based-------------
 import numpy as np
-import delay_spas
+import methods.delay_spas
 import matplotlib.pyplot as plt
 
 def count_mae(ex, published_result):
@@ -25,7 +25,7 @@ def naive_event(ex, sensitivity_, eps):
     published_result = []
 
     for i in range(total_time):
-        noise_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps, dim)
+        noise_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps, dim)
         published_result.append(noise_result)
 
     return published_result
@@ -42,23 +42,23 @@ def delay_svt_event(ex, sensitivity_, eps, delay_time):
     published_result = []
     flag_ = []
 
-    rho_ = delay_spas.add_noise(sensitivity_, eps_1 / 2, dim)
+    rho_ = methods.delay_spas.add_noise(sensitivity_, eps_1 / 2, dim)
 
     for i in range(total_time):
 
-        noise_result = ex[i][0] + delay_spas.add_noise(sensitivity_, eps_pub, dim)
+        noise_result = ex[i][0] + methods.delay_spas.add_noise(sensitivity_, eps_pub, dim)
 
         temp = []
         if i + delay_time < total_time:
             for j in range(i + 1, i + delay_time):
-                if ex[i][0] - ex[j][0] + delay_spas.add_noise(sensitivity_, eps_2 / (2 * (2 * delay_time - 1)), dim) > rho_:
+                if ex[i][0] - ex[j][0] + methods.delay_spas.add_noise(sensitivity_, eps_2 / (2 * (2 * delay_time - 1)), dim) > rho_:
                 #if ex[i][0] - ex[j][0] > 0:
                     temp.append(0)
                 else:
                     temp.append(1)
         elif i + 1 < total_time:
             for j in range(i + 1, total_time):
-                if ex[i][0] - ex[j][0] + delay_spas.add_noise(sensitivity_, eps_2 / (2 * (2 * delay_time - 1)), dim) > rho_:
+                if ex[i][0] - ex[j][0] + methods.delay_spas.add_noise(sensitivity_, eps_2 / (2 * (2 * delay_time - 1)), dim) > rho_:
                 #if ex[i][0] - ex[j][0] > 0:
                     temp.append(0)
                 else:

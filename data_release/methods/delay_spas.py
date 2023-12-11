@@ -4,7 +4,7 @@ import random
 import matplotlib.pyplot as plt
 # import pickle
 # import copy
-import find_optimal_tau
+import methods.find_optimal_tau
 
 
 def add_noise(sensitivity, eps, num):
@@ -87,7 +87,7 @@ def spas_delay(ex, eps, sensitivity_, window_size, delay_time):
             #     print('init', optimal_tau, publish_count)
             # else:
                 #optimal_tau, publish_count = find_optimal_tau.update_tau(known_data, search_start, search_end, window_size, eps_pub, sensitivity_pub, optimal_tau)
-            optimal_tau, publish_count = find_optimal_tau.find_init_tau(known_data, window_size + 1, eps_pub, sensitivity_)
+            optimal_tau, publish_count = methods.find_optimal_tau.find_init_tau(known_data, window_size + 1, eps_pub, sensitivity_)
             publish_count = max(1, publish_count)
             #print('update', optimal_tau, publish_count)
             
