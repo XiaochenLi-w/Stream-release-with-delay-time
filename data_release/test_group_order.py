@@ -5,6 +5,7 @@ import event_post
 import non_slide
 import pegasus
 import reduce_noise
+import order_adv
 
 # -------naive----------
 def run_naive_event(ex, sensitivity_, epsilon_list, round_):
@@ -67,33 +68,30 @@ def run_discontin_reduce(ex, sensitivity_, eps, round_, delay_time_list, tau):
     print('discontin_reduce:', error_)
     return error_
 
+# -------order_advance------------
+def run_order_advance(ex, sensitivity_, eps, round_, delay_time_list, buc_size):
+    error_ = []
+    for delay_time in delay_time_list:
+        err_round = 0
+        for j in range(round_):
+            published_result = order_adv.order_advance(ex, sensitivity_, eps, delay_time, buc_size)
+            err_round += order_adv.count_mae(ex, published_result)
+
+        error_.append(err_round / round_)
+    
+    print('order_adv:', error_)
+    return error_
+
+
 if __name__ == "__main__":
 
     ex = []
     filename = []
 
-    # count = 0
-    # ex1 = []
-    # filename1 = "./data/COVID19 DEATH.csv"
-    # with open(filename1, 'r', encoding='utf-8') as file_to_read:
-    #     while True:
-
-    #         lines = file_to_read.readline()
-    #         count += 1
-    #         if not lines:
-    #             break
-    #         elif count>= 3:
-    #             tmp = lines.split(',')
-                
-    #             ex1.append([int(float(tmp[-1]))])
-    # ex.append(ex1)
-    # filename.append(filename1)
-    
-
     count = 0
-    ex7 = []
-    filename7 = "./data/unemployment.csv"
-    with open(filename7, 'r', encoding='utf-8') as file_to_read:
+    ex1 = []
+    filename1 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/COVID19 DEATH.csv"
+    with open(filename1, 'r', encoding='utf-8') as file_to_read:
         while True:
 
             lines = file_to_read.readline()
@@ -101,16 +99,34 @@ if __name__ == "__main__":
             if not lines:
                 break
             elif count>= 3:
-                tmp = lines.split(',')        
-                ex7.append([int(tmp[-1])])
+                tmp = lines.split(',')
+                
+                ex1.append([int(float(tmp[-1]))])
+    ex.append(ex1)
+    filename.append(filename1)
+    
 
-    ex.append(ex7)
-    filename.append(filename7)
+    # count = 0
+    # ex7 = []
+    # filename7 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/unemployment.csv"
+    # with open(filename7, 'r', encoding='utf-8') as file_to_read:
+    #     while True:
+
+    #         lines = file_to_read.readline()
+    #         count += 1
+    #         if not lines:
+    #             break
+    #         elif count>= 3:
+    #             tmp = lines.split(',')        
+    #             ex7.append([int(tmp[-1])])
+
+    # ex.append(ex7)
+    # filename.append(filename7)
 
 
     # count = 0
     # ex5 = []
-    # filename5 = "./data/National_Custom_Data.csv"
+    # filename5 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/National_Custom_Data.csv"
     # with open(filename5, 'r', encoding='utf-8') as file_to_read:
     #     while True:
 
@@ -158,7 +174,8 @@ if __name__ == "__main__":
         #epsilon_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
         epsilon = 0.5
         # delay_time = 10
-        delay_time_list = [10, 30, 50, 70, 90]
+        #delay_time_list = [3, 10, 15, 20, 40, 60, 80, 100]
+        delay_time_list = [40, 80, 120, 140, 160, 180, 200, 300]
         tau = 3
         sensitivity_ = max(data) - min(data)
         #print(sensitivity_)
@@ -168,10 +185,12 @@ if __name__ == "__main__":
         error_order = run_delay_svt_event(ex[k], sensitivity_, epsilon, round_, delay_time_list)
         error_group = run_delay_group_event(ex[k], sensitivity_, epsilon, round_, delay_time_list, tau)
         error_disgroup_reduce = run_discontin_reduce(ex[k], sensitivity_, epsilon, round_, delay_time_list, tau)
+        error_order_advance = run_order_advance(ex[k], sensitivity_, epsilon, round_, delay_time_list, 40)
 
         #plt.plot(delay_time_list, error_naive, label='naive')
         plt.plot(delay_time_list, error_order, label='order')
         plt.plot(delay_time_list, error_group, label='disgroup')
         plt.plot(delay_time_list, error_disgroup_reduce, label='disgroup_reduce')
+        plt.plot(delay_time_list, error_order_advance, label='order_advance')
         plt.legend()
         plt.show()

@@ -148,7 +148,8 @@ def order_advance(ex, sensitivity_, eps, delay_time, buc_size):
         for j in range(buc_num):
             buc_sum[j] += delay_spas.add_noise(sensitivity_, eps_pub, 1)
             if j > 0 and buc_sum[j] < buc_sum[j - 1]:
-                buc_sum[j] = buc_sum[j - 1] + buc_size * (buc_size - 1) / 2
+                #buc_sum[j] = buc_sum[j - 1] + buc_size * (buc_size - 1) / 2
+                buc_sum[j] = buc_sum[j - 1]
 
         for j in range(delay_time):
             release_value = buc_sum[noise_bucalloc[j]] / buc_size
