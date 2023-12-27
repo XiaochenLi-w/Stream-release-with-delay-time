@@ -1,6 +1,4 @@
 import numpy as np
-import math
-
 
 def laplace(beta, data):
     output = data + np.random.laplace(0, beta, len(data))
@@ -14,43 +12,6 @@ def nm(q_ans, eps, sensitivity=1, monotonic=True):
 
     return np.argmax(noisy_ans)
 
-
-# def quality_func(data, sensitivity_low, sensitivity_upper, interval_, eps):
-#     m = len(data)
-    
-#     num = (sensitivity_upper - sensitivity_low + 1) // interval_
-#     possible_sens = np.zeros(num, dtype=float)
-#     c = 1
-#     for i in range(num):
-#             possible_sens[i] = sensitivity_low + c * interval_
-#             c += 1
-
-#     np.sort(data)
-
-#     sum_value = np.zeros(m, dtype = float)
-#     sum_value[0] = np.sum(data)
-#     for i in range(1, m):
-#         sum_value[i] = sum_value[i-1] - data[i-1]
-    
-#     q_ans = np.zeros(num, dtype=float)
-
-#     for i in range(num):
-#         var_ = possible_sens[i] * m * np.sqrt(2) / eps
-#         idx = np.where(data > possible_sens[i])
-#         if len(idx[0]) == 0:
-#             std_ = 0
-#         else:
-#             std_ = (sum_value[idx[0][0]] - (m - idx[0][0]) *  possible_sens[i]) / (m - idx[0][0])
-
-#         q_ans[i] = -(var_ + std_) / m
-    
-#         #print(var_ / m, std_ / m)
-#     sample_result = nm(q_ans, eps)
-#     #print(q_ans)
-
-#     print('new_sens', possible_sens[sample_result])
-    
-#     return possible_sens[sample_result]
 
 def quality_func(data, sensitivity_low, sensitivity_upper, interval_, eps):
     m = len(data)
@@ -78,8 +39,8 @@ def quality_func(data, sensitivity_low, sensitivity_upper, interval_, eps):
             benfit_ = m * np.sqrt(2) * (sensitivity_upper - possible_sens[i]) / eps
             lost_ = 0
         else:
-            benfit_ = idx[0][0] * np.sqrt(2) * (sensitivity_upper - possible_sens[i]) / eps
-            lost_ = (sum_value[idx[0][0]] - (m - idx[0][0]) * possible_sens[i]) / (m - idx[0][0])
+            benfit_ = m * np.sqrt(2) * (sensitivity_upper - possible_sens[i]) / eps
+            lost_ = (sum_value[idx[0][0]] - (m - idx[0][0]) * possible_sens[i])
 
         
 
@@ -87,8 +48,9 @@ def quality_func(data, sensitivity_low, sensitivity_upper, interval_, eps):
     
         #print(var_ / m, std_ / m)
     sample_result = nm(q_ans, eps)
-    print(q_ans)
-
+    #print(q_ans)
+    
+    #sample_result = np.argmax(q_ans)
     print('new_sens', possible_sens[sample_result])
     
     return possible_sens[sample_result]

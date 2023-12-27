@@ -99,19 +99,19 @@ def run_pegasus_delay(ex, sensitivity_, epsilon_list, round_, tau):
     return error_
 
 
-# -------contin + noise reduce + sliding + no close when publish-----------
-def run_reduce_noise_delay(ex, sensitivity_, epsilon_list, round_, tau, delay_time):
-    error_ = []
-    for eps in epsilon_list:
-        err_round = 0
-        for j in range(round_):
-            published_result = methods.reduce_noise.reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time)
-            err_round += methods.reduce_noise.count_mae(ex, published_result)
+# # -------contin + noise reduce + sliding + no close when publish-----------
+# def run_reduce_noise_delay(ex, sensitivity_, epsilon_list, round_, tau, delay_time):
+#     error_ = []
+#     for eps in epsilon_list:
+#         err_round = 0
+#         for j in range(round_):
+#             published_result = methods.reduce_noise.reduce_noise_delay(ex, sensitivity_, eps, tau, delay_time)
+#             err_round += methods.reduce_noise.count_mae(ex, published_result)
 
-        error_.append(err_round / round_)
+#         error_.append(err_round / round_)
     
-    print('contin_noisered:', error_)
-    return error_
+#     print('contin_noisered:', error_)
+#     return error_
 
 
 # -------contin + noise reduce + sliding + close when publish-----------
@@ -176,23 +176,23 @@ if __name__ == "__main__":
     # for i in range(len(ex)):
     #     data[i] = ex[i][0]
     
-    count = 0
-    ex1 = []
-    #filename1 = "./data/COVID19 DEATH.csv"
-    filename1 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/COVID19 DEATH.csv"
-    with open(filename1, 'r', encoding='utf-8') as file_to_read:
-        while True:
+    # count = 0
+    # ex1 = []
+    # #filename1 = "./data/COVID19 DEATH.csv"
+    # filename1 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/COVID19 DEATH.csv"
+    # with open(filename1, 'r', encoding='utf-8') as file_to_read:
+    #     while True:
 
-            lines = file_to_read.readline()
-            count += 1
-            if not lines:
-                break
-            elif count>= 3:
-                tmp = lines.split(',')
+    #         lines = file_to_read.readline()
+    #         count += 1
+    #         if not lines:
+    #             break
+    #         elif count>= 3:
+    #             tmp = lines.split(',')
                 
-                ex1.append([int(float(tmp[-1]))])
-    ex.append(ex1)
-    filename.append(filename1)
+    #             ex1.append([int(float(tmp[-1]))])
+    # ex.append(ex1)
+    # filename.append(filename1)
     
     # count = 0
     # ex2 = []
@@ -248,41 +248,58 @@ if __name__ == "__main__":
     # ex.append(ex4)
     # filename.append(filename4)
  
-    count = 0
-    ex5 = []
-    #filename5 = "./data/National_Custom_Data.csv"
-    filename5 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/National_Custom_Data.csv"
-    with open(filename5, 'r', encoding='utf-8') as file_to_read:
-        while True:
+    # count = 0
+    # ex5 = []
+    # #filename5 = "./data/National_Custom_Data.csv"
+    # filename5 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/National_Custom_Data.csv"
+    # with open(filename5, 'r', encoding='utf-8') as file_to_read:
+    #     while True:
 
-            lines = file_to_read.readline()
-            count += 1
-            if not lines:
-                break
-            elif count>= 3:
-                tmp = lines.split(',')
+    #         lines = file_to_read.readline()
+    #         count += 1
+    #         if not lines:
+    #             break
+    #         elif count>= 3:
+    #             tmp = lines.split(',')
                 
-                ex5.append([int(float(tmp[-2]))])
-    ex.append(ex5)
-    filename.append(filename5)
+    #             ex5.append([int(float(tmp[-2]))])
+    # ex.append(ex5)
+    # filename.append(filename5)
     
+    # count = 0
+    # ex7 = []
+    # #filename7 = "./data/unemployment.csv"
+    # filename7 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/unemployment.csv"
+    # with open(filename7, 'r', encoding='utf-8') as file_to_read:
+    #     while True:
+
+    #         lines = file_to_read.readline()
+    #         count += 1
+    #         if not lines:
+    #             break
+    #         elif count>= 3:
+    #             tmp = lines.split(',')        
+    #             ex7.append([int(tmp[-1])])
+
+    # ex.append(ex7)
+    # filename.append(filename7)
+
     count = 0
-    ex7 = []
-    #filename7 = "./data/unemployment.csv"
-    filename7 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/unemployment.csv"
-    with open(filename7, 'r', encoding='utf-8') as file_to_read:
+    ex8 = []
+    filename8 = "./data/footmart.csv"
+    with open(filename8, 'r', encoding='utf-8') as file_to_read:
         while True:
 
             lines = file_to_read.readline()
             count += 1
             if not lines:
                 break
-            elif count>= 3:
+            else:
                 tmp = lines.split(',')        
-                ex7.append([int(tmp[-1])])
+                ex8.append([int(tmp[-1])])
 
-    ex.append(ex7)
-    filename.append(filename7)
+    ex.append(ex8)
+    filename.append(filename8)
 
     for k in range(len(ex)):
         print('#It is the results of', filename[k])
@@ -297,7 +314,7 @@ if __name__ == "__main__":
         epsilon_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
         delay_time = 100
         tau = 3
-        sensitivity_ = max(data) - min(data)
+        sensitivity_ = max(data)
         #print(sensitivity_)
         #sensitivity_ = 1
 
@@ -311,13 +328,13 @@ if __name__ == "__main__":
         error_disgroup_reduce = run_discontin_reduce(ex[k], sensitivity_, epsilon_list, round_, delay_time, tau)
         error_order_advance = run_order_advance(ex[k], sensitivity_, epsilon_list, round_, delay_time, 20)
     
-        # plt.plot(epsilon_list, error_naive, label='naive')
-        # #plt.plot(epsilon_list, error_order, label='order')
-        # plt.plot(epsilon_list, error_group, label='group')
-        # plt.plot(epsilon_list, error_pegasus_delay, label='pegasus_delay')
-        # plt.plot(epsilon_list, error_pegasus_nodelay, label='pegasus_nodelay')
-        # plt.plot(epsilon_list, error_reduce_noise, label='reduce_noise')
-        # plt.plot(epsilon_list, error_reduce_noiseclose, label='reduce_noise_delayclose')
-        # plt.plot(epsilon_list, error_order_advance, label='order_advance')
-        # plt.legend()
-        # plt.show()
+        plt.plot(epsilon_list, error_naive, label='naive')
+        plt.plot(epsilon_list, error_order, label='order')
+        plt.plot(epsilon_list, error_group, label='group')
+        plt.plot(epsilon_list, error_pegasus_delay, label='pegasus_delay')
+        plt.plot(epsilon_list, error_pegasus_nodelay, label='pegasus_nodelay')
+        plt.plot(epsilon_list, error_reduce_noise, label='reduce_noise')
+        plt.plot(epsilon_list, error_reduce_noiseclose, label='reduce_noise_delayclose')
+        plt.plot(epsilon_list, error_order_advance, label='order_advance')
+        plt.legend()
+        plt.show()
