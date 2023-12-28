@@ -3,9 +3,9 @@ import random
 import math
 import matplotlib.pyplot as plt
 
-import common_tools
-import naive
-import sensitivity_calc
+import methods.common_tools
+import methods.naive
+import methods.sensitivity_calc
 
 def randomized_response(data, k, eps):
     p = math.exp(eps) / (math.exp(eps) + k - 1)
@@ -35,10 +35,17 @@ def order_advance(ex, domain_low, domain_high, eps, delay_time, buc_size, flag =
         eps_pub = eps - eps_buc
         data_batch = np.zeros(delay_time, dtype=int)
         c = 0
-        if flag == 1 and i % interval_ == 0:
+        if flag == 1 and i % interval_ == 0 and (i + 1) * delay_time<= total_time:
             eps_s = eps_pub / 2
             eps_pub = eps_pub - eps_s
-            sensitivity_ = sensitivity_calc.quality_func(data, domain_low, domain_high, interval_, eps_s)
+
+            data_sens = np.zeros(delay_time, dtype = int)
+            cc = 0
+            for qq in range(i * delay_time, (i + 1) * delay_time):
+                data_sens[cc] = ex[qq][0]
+                cc += 1
+
+            sensitivity_ = methods.sensitivity_calc.quality_func(data_sens, domain_low, domain_high, interval_, eps_s)
 
         for j in range(i * delay_time, (i + 1) * delay_time):
             data_batch[c] = ex[j][0]
@@ -57,7 +64,7 @@ def order_advance(ex, domain_low, domain_high, eps, delay_time, buc_size, flag =
             buc_sum[noise_bucalloc[j]] += data_batch[j]
 
         for j in range(buc_num):
-            buc_sum[j] += common_tools.add_noise(sensitivity_, eps_pub, 1)
+            buc_sum[j] += methods.common_tools.add_noise(sensitivity_, eps_pub, 1)
             if j > 0 and buc_sum[j] < buc_sum[j - 1]:
                 #buc_sum[j] = buc_sum[j - 1] + buc_size * (buc_size - 1) / 2
                 buc_sum[j] = buc_sum[j - 1]
@@ -88,7 +95,7 @@ def order_advance(ex, domain_low, domain_high, eps, delay_time, buc_size, flag =
             buc_sum[noise_bucalloc[j]] += data_batch[j]
 
         for j in range(buc_num):
-            buc_sum[j] += common_tools.add_noise(sensitivity_, eps_pub, 1)
+            buc_sum[j] += methods.common_tools.add_noise(sensitivity_, eps_pub, 1)
             if j > 0 and buc_sum[j] < buc_sum[j - 1]:
                 buc_sum[j] = buc_sum[j - 1] + buc_size * (buc_size - 1) / 2
 
@@ -105,9 +112,11 @@ def run_order_advance(ex, domain_low, domain_high, epsilon_list, round_, delay_t
         err_round = 0
         for j in range(round_):
             published_result = order_advance(ex, domain_low, domain_high, eps, delay_time, buc_size, flag, interval_)
-            err_round += common_tools.count_mae(ex, published_result)
+            err_round += methods.common_tools.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
+
+    print('order_adv:', error_)
 
     return error_
 
@@ -150,7 +159,7 @@ if __name__ == "__main__":
     
     buc_size = 10
 
-    error_1 = naive.run_naive_event(ex, max(data), epsilon_list, round_)
+    error_1 = methods.naive.run_naive_event(ex, max(data), epsilon_list, round_)
     error_2 = run_order_advance(ex, min(data), max(data), epsilon_list, round_, delay_time, buc_size, 1)
     print(error_1)
     print(error_2)

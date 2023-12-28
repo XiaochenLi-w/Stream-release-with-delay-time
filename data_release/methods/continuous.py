@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import common_tools
-import naive
-import sensitivity_calc
+import methods.common_tools
+import methods.naive
+import methods.sensitivity_calc
 
 def whether_group(groupi, old_avg, new_data, tau, eps_group, sensitivity_):
     total_num = len(groupi)
@@ -18,7 +18,7 @@ def whether_group(groupi, old_avg, new_data, tau, eps_group, sensitivity_):
 
     #print(dev / total_num)
 
-    if (dev / total_num) + common_tools.add_noise(sensitivity_ / total_num, eps_group / 4, 1) > tau + common_tools.add_noise(sensitivity_ / total_num, eps_group / 2, 1):
+    if (dev / total_num) + methods.common_tools.add_noise(sensitivity_ / total_num, eps_group / 4, 1) > tau + methods.common_tools.add_noise(sensitivity_ / total_num, eps_group / 2, 1):
         return 0, new_avg
     else:
         return 1, new_avg
@@ -44,23 +44,31 @@ def pegasus_nodelay(ex, domain_low, domain_high, eps, tau, flag = 0, interval_ =
     for i in range(total_time):
         if whether_update == 0:
             eps_pub = eps - eps_group
+        
+        if i % num_ == 0:
+            if (i / num_) % interval_ == 0 and flag == 1 and (i + 1) * num_ <= total_time:
+                eps_s = eps_pub / 2
+                eps_pub = eps_pub - eps_s
 
-        if (i / num_) % interval_ == 0 and flag == 1:
-            eps_s = eps_pub / 2
-            eps_pub = eps_pub - eps_s
-            sensitivity_ = sensitivity_calc.quality_func(data, domain_low, domain_high, interval_, eps_s)
-            whether_update = 1
-        else:
-            whether_update = 0
+                data_sens = np.zeros(num_, dtype = int)
+                cc = 0
+                for qq in range(i * num_, (i + 1) * num_):
+                    data_sens[cc] = ex[qq][0]
+                    cc += 1
+
+                sensitivity_ = methods.sensitivity_calc.quality_func(data_sens, domain_low, domain_high, interval_, eps_s)
+                whether_update = 1
+            else:
+                whether_update = 0
 
         if len(group_) == 0:
             group_.append(ex[i][0])
             avg_ = ex[i][0]
             group_index.append(i)
             if ex[i][0] > sensitivity_:
-                noisy_result = sensitivity_ + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                noisy_result = sensitivity_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
             else:
-                noisy_result = ex[i][0] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                noisy_result = ex[i][0] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
 
             published_result.append(noisy_result)
             group_noisy.append(noisy_result)
@@ -72,9 +80,9 @@ def pegasus_nodelay(ex, domain_low, domain_high, eps, tau, flag = 0, interval_ =
                 group_index.append(i)
                 avg_ = newavg
                 if ex[i][0] > sensitivity_:
-                    sum_ = sensitivity_ + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                    sum_ = sensitivity_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
                 else:
-                    sum_ = ex[i][0] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                    sum_ = ex[i][0] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
 
                 group_noisy.append(sum_)
                 for k in range(len(group_) - 1):
@@ -83,9 +91,9 @@ def pegasus_nodelay(ex, domain_low, domain_high, eps, tau, flag = 0, interval_ =
                 published_result.append(sum_)
             else:
                 if ex[i][0] > sensitivity_:
-                    noisy_result = sensitivity_ + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                    noisy_result = sensitivity_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
                 else:
-                    noisy_result = ex[i][0] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                    noisy_result = ex[i][0] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
 
                 published_result.append(noisy_result)
                 group_noisy.append(noisy_result)
@@ -114,14 +122,22 @@ def pegasus_delay(ex, domain_low, domain_high, eps, tau, flag = 0, interval_ = 5
     for i in range(total_time):
         if whether_update == 0:
             eps_pub = eps - eps_group
+        
+        if i % num_ == 0:
+            if (i / num_) % interval_ == 0 and flag == 1 and (i + 1) * num_ <= total_time:
+                eps_s = eps_pub / 2
+                eps_pub = eps_pub - eps_s
 
-        if (i / num_) % interval_ == 0 and flag == 1:
-            eps_s = eps_pub / 2
-            eps_pub = eps_pub - eps_s
-            sensitivity_ = sensitivity_calc.quality_func(data, domain_low, domain_high, interval_, eps_s)
-            whether_update = 1
-        else:
-            whether_update = 0
+                data_sens = np.zeros(num_, dtype = int)
+                cc = 0
+                for qq in range(i * num_, (i + 1) * num_):
+                    data_sens[cc] = ex[qq][0]
+                    cc += 1
+
+                sensitivity_ = methods.sensitivity_calc.quality_func(data_sens, domain_low, domain_high, interval_, eps_s)
+                whether_update = 1
+            else:
+                whether_update = 0
 
         if len(group_) == 0:
             group_.append(ex[i][0])
@@ -137,15 +153,15 @@ def pegasus_delay(ex, domain_low, domain_high, eps, tau, flag = 0, interval_ = 5
                 sum_ = 0
                 for k in range(len(group_)):
                     if group_[k] > sensitivity_:
-                        sum_ += sensitivity_ + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                        sum_ += sensitivity_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
                     else:
-                        sum_ += group_[k] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                        sum_ += group_[k] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
 
                 sum_ = sum_ / len(group_)
                 for k in range(len(group_)):
                     published_result.append(sum_)
 
-                noisy_result = ex[i][0] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                noisy_result = ex[i][0] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
                 published_result.append(noisy_result)
                 group_ = []
 
@@ -153,9 +169,9 @@ def pegasus_delay(ex, domain_low, domain_high, eps, tau, flag = 0, interval_ = 5
         sum_ = 0
         for k in range(len(group_)):
             if group_[k] > sensitivity_:
-                sum_ += sensitivity_ + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                sum_ += sensitivity_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
             else:
-                sum_ += group_[k] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                sum_ += group_[k] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
 
         sum_ = sum_ / len(group_)
         for k in range(len(group_)):
@@ -181,14 +197,22 @@ def reduce_noise_continuous(ex, domain_low, domain_high, eps, tau, delay_time, f
     for i in range(total_time):
         if whether_update == 0:
             eps_pub = eps - eps_group
+        
+        if i % delay_time == 0:
+            if (i / delay_time) % interval_ == 0 and flag == 1 and (i + 1) * delay_time <= total_time:
+                eps_s = eps_pub / 2
+                eps_pub = eps_pub - eps_s
 
-        if (i / delay_time) % interval_ == 0 and flag == 1:
-            eps_s = eps_pub / 2
-            eps_pub = eps_pub - eps_s
-            sensitivity_ = sensitivity_calc.quality_func(data, domain_low, domain_high, interval_, eps_s)
-            whether_update = 1
-        else:
-            whether_update = 0
+                data_sens = np.zeros(delay_time, dtype = int)
+                cc = 0
+                for qq in range(i * delay_time, (i + 1) * delay_time):
+                    data_sens[cc] = ex[qq][0]
+                    cc += 1
+
+                sensitivity_ = methods.sensitivity_calc.quality_func(data_sens, domain_low, domain_high, interval_, eps_s)
+                whether_update = 1
+            else:
+                whether_update = 0
 
         if i % delay_time == 0 and len(group_) != 0:
             sum_ = 0
@@ -198,7 +222,7 @@ def reduce_noise_continuous(ex, domain_low, domain_high, eps, tau, delay_time, f
                 else:
                     sum_ += group_[k]
 
-            sum_ = (sum_ + common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+            sum_ = (sum_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
             for k in range(len(group_)):
                 published_result.append(sum_)
             group_ = [] 
@@ -219,11 +243,11 @@ def reduce_noise_continuous(ex, domain_low, domain_high, eps, tau, delay_time, f
                         sum_ += sensitivity_
                     else:
                         sum_ += group_[k]
-                sum_ = (sum_ + common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+                sum_ = (sum_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
                 for k in range(len(group_)):
                     published_result.append(sum_)
 
-                noisy_result = ex[i][0] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                noisy_result = ex[i][0] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
                 published_result.append(noisy_result)
                 group_ = []
 
@@ -235,7 +259,7 @@ def reduce_noise_continuous(ex, domain_low, domain_high, eps, tau, delay_time, f
             else:
                 sum_ += group_[k]
 
-        sum_ = (sum_ + common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
+        sum_ = (sum_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_)
         for k in range(len(group_)):
             published_result.append(sum_)
     #print(published_result)
@@ -248,9 +272,11 @@ def run_pegasus_nodelay(ex, domain_low, domain_high, epsilon_list, round_, tau, 
         err_round = 0
         for j in range(round_):
             published_result = pegasus_nodelay(ex, domain_low, domain_high, eps, tau, flag, interval_, num_)
-            err_round += common_tools.count_mae(ex, published_result)
+            err_round += methods.common_tools.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
+
+    print('pegasus:', error_)
 
     return error_
 
@@ -261,9 +287,11 @@ def run_pegasus_delay(ex, domain_low, domain_high, epsilon_list, round_, tau, fl
         err_round = 0
         for j in range(round_):
             published_result = pegasus_delay(ex, domain_low, domain_high, eps, tau, flag, interval_, num_)
-            err_round += common_tools.count_mae(ex, published_result)
+            err_round += methods.common_tools.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
+    
+    print('PeGaSus_delaypp:', error_)
 
     return error_
 
@@ -274,9 +302,11 @@ def run_reduce_noise_continuous(ex, domain_low, domain_high, epsilon_list, round
         err_round = 0
         for j in range(round_):
             published_result = reduce_noise_continuous(ex, domain_low, domain_high, eps, tau, delay_time, flag, interval_)
-            err_round += common_tools.count_mae(ex, published_result)
+            err_round += methods.common_tools.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
+
+    print('contin_noisered_close:', error_)
 
     return error_
 

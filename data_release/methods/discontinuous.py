@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import common_tools
-import naive
-import sensitivity_calc
+import methods.common_tools
+import methods.naive
+import methods.sensitivity_calc
 
 #----------judge wether invlove the data into a group
 def whether_group(groupi, old_avg, new_data, tau, eps_group, sensitivity_, delay_time):
@@ -19,7 +19,7 @@ def whether_group(groupi, old_avg, new_data, tau, eps_group, sensitivity_, delay
 
     #print(dev / total_num)
 
-    if (dev / total_num) + common_tools.add_noise(sensitivity_ / total_num, eps_group / (4 * (2 * delay_time - 1)), 1) > tau + common_tools.add_noise(sensitivity_ / total_num, eps_group / (2 * (2 * delay_time - 1)), 1):
+    if (dev / total_num) + methods.common_tools.add_noise(sensitivity_ / total_num, eps_group / (4 * (2 * delay_time - 1)), 1) > tau + methods.common_tools.add_noise(sensitivity_ / total_num, eps_group / (2 * (2 * delay_time - 1)), 1):
         return 0, new_avg
     else:
         return 1, new_avg
@@ -41,10 +41,17 @@ def delay_discontin_post(ex, domain_low, domain_high, eps, delay_time, tau, flag
             eps_pub = eps - eps_group
 
         if i % delay_time == 0:
-            if (i / delay_time) % interval_ == 0 and flag == 1:
+            if (i / delay_time) % interval_ == 0 and flag == 1 and (i + 1) * delay_time <= total_time:
                 eps_s = eps_pub / 2
                 eps_pub = eps_pub - eps_s
-                sensitivity_ = sensitivity_calc.quality_func(data, domain_low, domain_high, interval_, eps_s)
+
+                data_sens = np.zeros(delay_time, dtype = int)
+                cc = 0
+                for qq in range(i * delay_time, (i + 1) * delay_time):
+                    data_sens[cc] = ex[qq][0]
+                    cc += 1
+
+                sensitivity_ = methods.sensitivity_calc.quality_func(data_sens, domain_low, domain_high, interval_, eps_s)
                 whether_update = 1
             else:
                 whether_update = 0
@@ -55,9 +62,9 @@ def delay_discontin_post(ex, domain_low, domain_high, eps, delay_time, tau, flag
                     sum_ = 0
                     for k in range(len(group_[j])):
                         if group_[j][k] > sensitivity_:
-                            sum_ += sensitivity_ + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                            sum_ += sensitivity_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
                         else:
-                            sum_ += group_[j][k] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                            sum_ += group_[j][k] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
 
                     sum_ = sum_ / len(group_[j])
                     for k in range(len(group_[j])):
@@ -106,9 +113,9 @@ def delay_discontin_post(ex, domain_low, domain_high, eps, delay_time, tau, flag
                     sum_ = 0
                     for k in range(len(group_[j])):
                         if group_[j][k] > sensitivity_:
-                            sum_ += sensitivity_ + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                            sum_ += sensitivity_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
                         else:
-                            sum_ += group_[j][k] + common_tools.add_noise(sensitivity_, eps_pub, dim)
+                            sum_ += group_[j][k] + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)
 
                     sum_ = sum_ / len(group_[j])
                     for k in range(len(group_[j])):
@@ -139,10 +146,17 @@ def discontin_reduce(ex, domain_low, domain_high, eps, delay_time, tau, flag = 0
             eps_pub = eps - eps_group
 
         if i % delay_time == 0:
-            if (i / delay_time) % interval_ == 0 and flag == 1:
+            if (i / delay_time) % interval_ == 0 and flag == 1 and (i + 1) * delay_time <= total_time:
                 eps_s = eps_pub / 2
                 eps_pub = eps_pub - eps_s
-                sensitivity_ = sensitivity_calc.quality_func(data, domain_low, domain_high, interval_, eps_s)
+
+                data_sens = np.zeros(delay_time, dtype = int)
+                cc = 0
+                for qq in range(i * delay_time, (i + 1) * delay_time):
+                    data_sens[cc] = ex[qq][0]
+                    cc += 1
+
+                sensitivity_ = methods.sensitivity_calc.quality_func(data_sens, domain_low, domain_high, interval_, eps_s)
                 whether_update = 1
             else:
                 whether_update = 0
@@ -157,7 +171,7 @@ def discontin_reduce(ex, domain_low, domain_high, eps, delay_time, tau, flag = 0
                         else:
                             sum_ += group_[j][k]
 
-                    sum_ = (sum_ + common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
+                    sum_ = (sum_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
                     for k in range(len(group_[j])):
                         index = group_index[j][k]
                         results_indelay[index % delay_time] = sum_
@@ -208,7 +222,7 @@ def discontin_reduce(ex, domain_low, domain_high, eps, delay_time, tau, flag = 0
                         else:
                             sum_ += group_[j][k]
 
-                    sum_ = (sum_ + common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
+                    sum_ = (sum_ + methods.common_tools.add_noise(sensitivity_, eps_pub, dim)) / len(group_[j])
                     for k in range(len(group_[j])):
                         index = group_index[j][k]
                         results_indelay[index % delay_time] = sum_
@@ -226,9 +240,11 @@ def run_discontin_post(ex, domain_low, domain_high, epsilon_list, round_, delay_
         err_round = 0
         for j in range(round_):
             published_result = delay_discontin_post(ex, domain_low, domain_high, eps, delay_time, tau, flag, interval_)
-            err_round += common_tools.count_mae(ex, published_result)
+            err_round += methods.common_tools.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
+
+    print('discontin_pp:', error_)
 
     return error_
 
@@ -238,9 +254,11 @@ def run_discontin_reduce(ex, domain_low, domain_high, epsilon_list, round_, dela
         err_round = 0
         for j in range(round_):
             published_result = discontin_reduce(ex, domain_low, domain_high, eps, delay_time, tau, flag, interval_)
-            err_round += common_tools.count_mae(ex, published_result)
+            err_round += methods.common_tools.count_mae(ex, published_result)
 
         error_.append(err_round / round_)
+
+    print('discontin_reduce:', error_)
 
     return error_
 
