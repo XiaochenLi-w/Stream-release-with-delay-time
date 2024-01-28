@@ -24,7 +24,7 @@ def count_mae(ex, published_result):
     error_sum = 0
 
     for i in range(published_time):
-        error_sum += abs(ex[i][0] - published_result[i])
+        error_sum += abs(ex[i][0] - published_result[i][0])
     
     return error_sum / published_time
     

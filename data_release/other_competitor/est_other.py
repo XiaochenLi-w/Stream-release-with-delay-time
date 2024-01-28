@@ -1,27 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import methods.naive
-import methods.continuous
-import methods.discontinuous
-import methods.compOrder
-import methods.bucOrder
+from other_competitor.adapub import Adapub
 import methods.common_tools
 
-def est_sens_opt(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_size, delay_time, flag = 0, interval_ = 5, num_ = 100):
+def est_sens_opt(ex_, domain_low, domain_high, epsilon_list, round_):
     
-    # error_naive = methods.naive.run_naive_sens(ex, domain_low, domain_high, epsilon_list, round_, flag, interval_, num_)
-
-    # error_pegasus_delay = methods.continuous.run_pegasus_delay(ex, domain_low, domain_high, epsilon_list, round_, tau, flag, interval_, num_)
-    # error_pegasus_nodelay = methods.continuous.run_pegasus_nodelay(ex, domain_low, domain_high, epsilon_list, round_, tau, flag, interval_, num_)
-    # error_continred = methods.continuous.run_reduce_noise_continuous(ex, domain_low, domain_high, epsilon_list, round_, tau, delay_time, flag, interval_)
-
-    # error_discontinpp = methods.discontinuous.run_discontin_post(ex, domain_low, domain_high, epsilon_list, round_, delay_time, tau, flag, interval_)
-    # error_discontinred = methods.discontinuous.run_discontin_reduce(ex, domain_low, domain_high, epsilon_list, round_, delay_time, tau, flag, interval_)
-
-    # error_order = methods.compOrder.run_comporder(ex, domain_low, domain_high, epsilon_list, round_, delay_time, flag, interval_, num_)
-    error_order_advance = methods.bucOrder.run_order_advance(ex, domain_low, domain_high, epsilon_list, round_, delay_time, buc_size, flag, interval_)
-     
+    error_adapub = []
+    for para_eps in epsilon_list:
+        error_ = 0
+        mech = Adapub(para_eps, len(ex_), 1)
+    
+        for r in range(round_):
+            op, publish_num = mech.run(ex_, domain_high)
+            error_ += methods.common_tools.count_mae(ex_, op)
+        
+        error_adapub.append(error_/round_)
+    
+        
     # error = []
     # error.append(error_naive)
     # error.append(error_pegasus_delay)
@@ -44,7 +40,7 @@ def est_sens_opt(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_siz
     # print('order_adv:', error_order_advance)
     # print(error_naive[0], ',', error_pegasus_delay[0], ',', error_discontinpp[0], ',', error_order[0], ',', error_order_advance[0])
     # print(error_discontinred[0], ',', error_order[0], ',', error_order_advance[0])
-    print(error_order_advance[0])
+    print(error_adapub)
 
     # plt.plot(epsilon_list, error_naive, label='naive')
     # plt.plot(epsilon_list, error_order, label='order')
@@ -63,23 +59,23 @@ if __name__ == "__main__":
     ex = []
     filename = []
     
-    count = 0
-    ex1 = []
-    #filename1 = "./data/COVID19 DEATH.csv"
-    filename1 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/COVID19 DEATH.csv"
-    with open(filename1, 'r', encoding='utf-8') as file_to_read:
-        while True:
+    # count = 0
+    # ex1 = []
+    # #filename1 = "./data/COVID19 DEATH.csv"
+    # filename1 = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/COVID19 DEATH.csv"
+    # with open(filename1, 'r', encoding='utf-8') as file_to_read:
+    #     while True:
 
-            lines = file_to_read.readline()
-            count += 1
-            if not lines:
-                break
-            elif count>= 3:
-                tmp = lines.split(',')
+    #         lines = file_to_read.readline()
+    #         count += 1
+    #         if not lines:
+    #             break
+    #         elif count>= 3:
+    #             tmp = lines.split(',')
                 
-                ex1.append([int(float(tmp[-1]))])
-    ex.append(ex1)
-    filename.append(filename1)
+    #             ex1.append([int(float(tmp[-1]))])
+    # ex.append(ex1)
+    # filename.append(filename1)
     
     # count = 0
     # ex2 = []
@@ -187,22 +183,22 @@ if __name__ == "__main__":
     # ex.append(ex9)
     # filename.append(filename9)
 
-    # count = 0
-    # ex9 = []
-    # filename9 = "./data/ILINet.csv"
-    # with open(filename9, 'r', encoding='utf-8') as file_to_read:
-    #     while True:
+    count = 0
+    ex9 = []
+    filename9 = "./data/ILINet.csv"
+    with open(filename9, 'r', encoding='utf-8') as file_to_read:
+        while True:
 
-    #         lines = file_to_read.readline()
-    #         count += 1
-    #         if not lines:
-    #             break
-    #         else:
-    #             tmp = lines.split(',')        
-    #             ex9.append([int(tmp[-1])])
+            lines = file_to_read.readline()
+            count += 1
+            if not lines:
+                break
+            else:
+                tmp = lines.split(',')        
+                ex9.append([int(tmp[-1])])
 
-    # ex.append(ex9)
-    # filename.append(filename9)
+    ex.append(ex9)
+    filename.append(filename9)
 
     for k in range(len(ex)):
         print('#It is the results of', filename[k])
@@ -214,13 +210,10 @@ if __name__ == "__main__":
 
         round_ = 20
         #epsilon_list = [0.00001, 0.00002, 0.00003, 0.00004, 0.00005]
-        epsilon_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+        epsilon_list = [0.1, 0.5, 1.0]
         #epsilon_list = [0.5]
-        delay_time = 10
-        tau = 3
-        buc_size = 100
         print('data domain:', min(data), max(data))
         #sensitivity_ = 1
 
-        est_sens_opt(ex[k], min(data), max(data), epsilon_list, round_, tau, buc_size, delay_time, 0)
+        est_sens_opt(ex[k], min(data), max(data), epsilon_list, round_)
     
