@@ -12,7 +12,7 @@ import methods.common_tools
 
 def est_bucorder(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_list, delay_time, flag = 0, interval_ = 5, num_ = 100):
 
-    error_draw = np.zeros([len(epsilon_list), len(buc_list)], dtype=float)
+    np.zeros([len(epsilon_list), len(buc_list)], dtype=float)
     error = []
 
     for buc_size in buc_list:
