@@ -12,7 +12,7 @@ import methods.common_tools
 
 def est_bucorder(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_list, delay_time, flag = 0, interval_ = 5, num_ = 100):
 
-    error_draw = np.zeros([len(epsilon_list), len(buc_list)], dtype=float)
+    np.zeros([len(epsilon_list), len(buc_list)], dtype=float)
     error = []
 
     for buc_size in buc_list:
@@ -22,20 +22,6 @@ def est_bucorder(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_lis
     print(error)
 
     plt.plot(buc_list, error)
-    plt.legend()
-    plt.show()
-
-def est_bucorder_delay(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_size, delay_time_list, flag = 0, interval_ = 5, num_ = 100):
-
-    error = []
-
-    for delay_time in delay_time_list:
-        error_order = methods.bucOrder.run_order_advance(ex, domain_low, domain_high, epsilon_list, round_, delay_time, buc_size, flag, interval_)
-        error.append(error_order[0])
-
-    print(error)
-
-    plt.plot(delay_time_list, error, label='order_advance')
     plt.legend()
     plt.show()
 
