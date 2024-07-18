@@ -2,7 +2,7 @@
 
 Tested Python version: 3.11.4 and 3.10.8
 
-`numpy`, `math` , ``random`, `os`, ` sys`,  and `matplotlib` libraries are required.
+`numpy`, `math` , `random`, `os`, ` sys`,  and `matplotlib` libraries are required.
 
 ==To verify all experimental results presented in the paper, please refer to the Evaluation section in ‘ndss_ae_appendix.pdf’. This section will provide the detailed steps to ensure a comprehensive validation of the experiments.==
 
