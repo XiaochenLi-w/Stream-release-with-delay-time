@@ -60,3 +60,8 @@ Simply run:
 ```
 python ./release/est_group.py
 ```
+
+> [!NOTE]
+>
+> The file paths in the code are set according to the Windows system. If testing on other systems, you may need to modify the dataset file reading paths accordingly.
+
