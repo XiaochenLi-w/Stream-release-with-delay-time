@@ -350,7 +350,7 @@ if __name__ == "__main__":
     #sensitivity_ = 1
     delay_time = 100
 
-    error_1 = naive.run_naive_event(ex, max(data), epsilon_list, round_)
+    error_1 = methods.naive.run_naive_event(ex, max(data), epsilon_list, round_)
     error_2 = run_pegasus_delay(ex, min(data), max(data), epsilon_list, round_, tau, 1, 2)
     error_3 = run_pegasus_nodelay(ex, min(data), max(data), epsilon_list, round_, tau, 1, 2)
     error_4 = run_reduce_noise_continuous(ex, min(data), max(data), epsilon_list, round_, tau, delay_time, 1, 2)

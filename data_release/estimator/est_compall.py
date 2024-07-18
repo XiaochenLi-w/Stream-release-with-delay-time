@@ -49,7 +49,7 @@ if __name__ == "__main__":
     
     count = 0
     ex1 = []
-    filename1 = "./data_release/data/COVID19 DEATH.csv"
+    filename1 = "./data_release/data/COVID19_DEATH.csv"
     with open(filename1, 'r', encoding='utf-8') as file_to_read:
         while True:
 

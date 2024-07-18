@@ -25,20 +25,6 @@ def est_bucorder(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_lis
     plt.legend()
     plt.show()
 
-def est_bucorder_delay(ex, domain_low, domain_high, epsilon_list, round_, tau, buc_size, delay_time_list, flag = 0, interval_ = 5, num_ = 100):
-
-    error = []
-
-    for delay_time in delay_time_list:
-        error_order = methods.bucOrder.run_order_advance(ex, domain_low, domain_high, epsilon_list, round_, delay_time, buc_size, flag, interval_)
-        error.append(error_order[0])
-
-    print(error)
-
-    plt.plot(delay_time_list, error, label='order_advance')
-    plt.legend()
-    plt.show()
-
 if __name__ == "__main__":
 
     ex = []
