@@ -4,7 +4,7 @@ This repository supports the paper "Delay-allowed Differentially Private Data St
 
 ### Structure of this Repository
 
-![orgianzer](.\organization.png)
+![orgianzer](https://github.com/XiaochenLi-w/Stream-release-with-delay-time/blob/ae/organization.png)
 
 The ‘data_delease’ file contains four folders.
 
