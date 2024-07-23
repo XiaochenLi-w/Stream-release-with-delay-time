@@ -266,19 +266,7 @@ if __name__ == "__main__":
 
     count = 0
     ex = []
-    # filename = "./data/unemployment.csv"
-    # with open(filename, 'r', encoding='utf-8') as file_to_read:
-    #     while True:
-
-    #         lines = file_to_read.readline()
-    #         count += 1
-    #         if not lines:
-    #             break
-    #         elif count>= 3:
-    #             tmp = lines.split(',')        
-    #             ex.append([int(tmp[-1])])
-
-    filename = "./data/COVID19 DEATH.csv"
+    filename = "./data/unemployment.csv"
     with open(filename, 'r', encoding='utf-8') as file_to_read:
         while True:
 
@@ -287,9 +275,21 @@ if __name__ == "__main__":
             if not lines:
                 break
             elif count>= 3:
-                tmp = lines.split(',')
+                tmp = lines.split(',')        
+                ex.append([int(tmp[-1])])
+
+    # filename = "./data/COVID19 DEATH.csv"
+    # with open(filename, 'r', encoding='utf-8') as file_to_read:
+    #     while True:
+
+    #         lines = file_to_read.readline()
+    #         count += 1
+    #         if not lines:
+    #             break
+    #         elif count>= 3:
+    #             tmp = lines.split(',')
                 
-                ex.append([int(float(tmp[-1]))])
+    #             ex.append([int(float(tmp[-1]))])
     
     # filename = "./data/ILINet.csv"
     # with open(filename, 'r', encoding='utf-8') as file_to_read:

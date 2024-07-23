@@ -45,23 +45,6 @@ if __name__ == "__main__":
 
     ex = []
     filename = []
-    
-    count = 0
-    ex1 = []
-    filename1 = "./data_release/data/COVID19 DEATH.csv"
-    with open(filename1, 'r', encoding='utf-8') as file_to_read:
-        while True:
-
-            lines = file_to_read.readline()
-            count += 1
-            if not lines:
-                break
-            elif count>= 3:
-                tmp = lines.split(',')
-                
-                ex1.append([int(float(tmp[-1]))])
-    ex.append(ex1)
-    filename.append(filename1)
 
     count = 0
     ex2 = []
@@ -96,23 +79,6 @@ if __name__ == "__main__":
 
     ex.append(ex3)
     filename.append(filename3)
-
-    count = 0
-    ex4 = []
-    filename4 = "./data_release/data/footmart.csv"
-    with open(filename4, 'r', encoding='utf-8') as file_to_read:
-        while True:
-
-            lines = file_to_read.readline()
-            count += 1
-            if not lines:
-                break
-            else:
-                tmp = lines.split(',')        
-                ex4.append([int(float(tmp[-1]))])
-
-    ex.append(ex4)
-    filename.append(filename4)
 
     for k in range(len(ex)):
         print('#It is the results of', filename[k])

@@ -2,10 +2,20 @@ import numpy as np
 from scipy.stats import entropy
 from sklearn.metrics import mean_squared_error
 from scipy.special import spence
-from boosting import boosting
+# from boosting import boosting
 
 import queue
 import random
+
+def boosting(Aq, lamda, mu, eta):
+    if Aq <= lamda:
+        aq = 1
+    elif Aq >= lamda + mu:
+        aq = -1
+    else:
+        aq=1-2 * (Aq - lamda) / mu
+        
+    return aq
 
 def get_unique_random_number(small_numbers,medium_numbers,large_numbers,small_numbers_set,medium_numbers_set,large_numbers_set):
     while True:
@@ -157,37 +167,8 @@ def main():
     ex = []
     filename = []
     
-    # count = 0
-    # #filename1 = "./COVID19 DEATH.csv"
-    # filename = "D:/stream_delay/delay_code_github/Stream-release-with-delay-time/data_release/data/COVID19 DEATH.csv"
-    # with open(filename, 'r', encoding='utf-8') as file_to_read:
-    #     while True:
-
-    #         lines = file_to_read.readline()
-    #         count += 1
-    #         if not lines:
-    #             break
-    #         elif count>= 3:
-    #             tmp = lines.split(',')
-                
-    #             ex.append([int(float(tmp[-1]))])
-
-    # count = 0
-    # filename = "./ILINet.csv"
-    # with open(filename, 'r', encoding='utf-8') as file_to_read:
-    #     while True:
-
-    #         lines = file_to_read.readline()
-    #         count += 1
-    #         if not lines:
-    #             break
-    #         else:
-    #             tmp = lines.split(',')        
-    #             ex.append([int(tmp[-1])])
-
-
     count = 0
-    filename = "./data_release/data/unemployment.csv"
+    filename = "./data_release/data/ILINet.csv"
     with open(filename, 'r', encoding='utf-8') as file_to_read:
         while True:
 
@@ -197,7 +178,21 @@ def main():
                 break
             elif count>= 3:
                 tmp = lines.split(',')        
-                ex.append([int(tmp[-1])])
+                ex.append([int(float(tmp[-1]))])
+
+
+    # count = 0
+    # filename = "./data_release/data/unemployment.csv"
+    # with open(filename, 'r', encoding='utf-8') as file_to_read:
+    #     while True:
+
+    #         lines = file_to_read.readline()
+    #         count += 1
+    #         if not lines:
+    #             break
+    #         elif count>= 3:
+    #             tmp = lines.split(',')        
+    #             ex.append([int(tmp[-1])])
 
     length_ = len(ex)
     data = np.zeros(length_, dtype=int)
