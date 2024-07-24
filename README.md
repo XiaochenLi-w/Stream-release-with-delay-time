@@ -102,3 +102,7 @@ python ./data_release/other_competitor/DPI_DEMO_script.py
 > [!NOTE]
 >
 > The code for this part comes from the open source libraries of papers “DPI: https://github.com/ShuyaFeng/DPI” and “Adapub: https://dbresearch.uni-salzburg.at/projects/dpbench/”.
+
+### LICENSE
+
+MIT License
