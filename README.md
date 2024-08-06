@@ -4,7 +4,7 @@ This repository supports the paper "Delay-allowed Differentially Private Data St
 
 ### Structure of this Repository
 
-![orgianzer](.\organization.png)
+![orgianzer](https://github.com/XiaochenLi-w/Stream-release-with-delay-time/blob/ae/organization.png)
 
 The ‘data_delease’ file contains four folders.
 
@@ -102,3 +102,7 @@ python ./data_release/other_competitor/DPI_DEMO_script.py
 > [!NOTE]
 >
 > The code for this part comes from the open source libraries of papers “DPI: https://github.com/ShuyaFeng/DPI” and “Adapub: https://dbresearch.uni-salzburg.at/projects/dpbench/”.
+
+### LICENSE
+
+MIT License
