@@ -74,7 +74,7 @@ def framework(data, epsilon, tslot,lamda, mu):
     output_ks1=[]
     total_accum = np.zeros(DEFAULT_DIST_LEN)
     query = 1
-    print("%%%%%%")
+    #print("%%%%%%")
     
     mae = 0
     c = 0
@@ -106,7 +106,10 @@ def framework(data, epsilon, tslot,lamda, mu):
         queryset.append(divs_acc)
         queryset.append(divs_cur)
         output = np.zeros(len(divs_acc))
-        alpha=1/2*np.log((1+2*eta)/(1-2*eta))
+        tmp = (1+2*eta)/(1-2*eta)
+        if (1+2*eta)/(1-2*eta) < 0:
+            tmp = 1
+        alpha=1/2*np.log(tmp)
 
         synoposislist = [None] * length
         possible_outcomes = [i for i in range(length)]
