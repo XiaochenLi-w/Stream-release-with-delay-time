@@ -17,7 +17,7 @@ The ‘data_delease’ file contains four folders.
 
 Tested Python version: 3.11.4 and 3.10.8
 
-`numpy`, `math`, `random`, `os`, ` sys`,  and `matplotlib` libraries are required for our source code.
+`numpy`, `math`, `random`, `os`, ` sys`, `matplotlib`, and `scikit-learn` libraries are required for our source code.
 
 ### Evaluation
 
