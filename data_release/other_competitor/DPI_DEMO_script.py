@@ -169,10 +169,11 @@ def main():
 
     ex = []
     filename = []
-    
+
     count = 0
-    filename = "./data_release/data/ILINet.csv"
-    with open(filename, 'r', encoding='utf-8') as file_to_read:
+    ex2 = []
+    filename2 = "./data_release/data/unemployment.csv"
+    with open(filename2, 'r', encoding='utf-8') as file_to_read:
         while True:
 
             lines = file_to_read.readline()
@@ -181,39 +182,49 @@ def main():
                 break
             elif count>= 3:
                 tmp = lines.split(',')        
-                ex.append([int(float(tmp[-1]))])
+                ex2.append([int(tmp[-1])])
 
+    ex.append(ex2)
+    filename.append(filename2)
 
-    # count = 0
-    # filename = "./data_release/data/unemployment.csv"
-    # with open(filename, 'r', encoding='utf-8') as file_to_read:
-    #     while True:
+    count = 0
+    ex3 = []
+    filename3 = "./data_release/data/ILINet.csv"
+    with open(filename3, 'r', encoding='utf-8') as file_to_read:
+        while True:
 
-    #         lines = file_to_read.readline()
-    #         count += 1
-    #         if not lines:
-    #             break
-    #         elif count>= 3:
-    #             tmp = lines.split(',')        
-    #             ex.append([int(tmp[-1])])
+            lines = file_to_read.readline()
+            count += 1
+            if not lines:
+                break
+            elif count>= 3:
+                tmp = lines.split(',')        
+                ex3.append([int(float(tmp[-1]))])
 
-    length_ = len(ex)
-    data = np.zeros(length_, dtype=int)
-    for i in range(length_):
-        data[i] = ex[i][0]
+    ex.append(ex3)
+    filename.append(filename3)
 
-    epsilon_list = [0.1, 0.5, 1.0]
-    
-    pritvate_result = []
-    round_ = 10
-    for epsilon in epsilon_list:
-        err = 0
-        for r in range(round_):
-            err += framework(data, epsilon, tslot, lamda, mu)
-        err = err / round_
+    for k in range(len(ex)):
+        print('#It is the results of', filename[k])
 
-        pritvate_result.append(err)
+        length_ = len(ex[k])
+        data = np.zeros(length_, dtype=int)
+        for i in range(length_):
+            data[i] = ex[k][i][0]
+
+        epsilon_list = [0.1, 0.5, 1.0]
         
-    print(pritvate_result)
+        pritvate_result = []
+        round_ = 10
+        for epsilon in epsilon_list:
+            err = 0
+            for r in range(round_):
+                err += framework(data, epsilon, tslot, lamda, mu)
+            err = err / round_
+
+            pritvate_result.append(err)
+            
+        print(pritvate_result)
+    
 if __name__ == "__main__":
     main()
